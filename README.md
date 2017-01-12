@@ -1,4 +1,4 @@
-*Fast and Precise Type Checking for JavaScript: Are you in Flow?*
+Fast and Precise Type Checking for JavaScript: Are you in Flow?
 ===
 
 ...
