@@ -1,6 +1,0 @@
-{
-  "plugins": ["flowtype-errors"]
-  "rules": {
-    "flowtype-errors/show-errors": 2
-  }
-}
