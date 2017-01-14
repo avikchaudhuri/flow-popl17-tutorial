@@ -78,12 +78,15 @@ node_modules/.bin/flow
 
 To execute an example, e.g. `example7.js`, run
 ```
-babel-node example7.js
+node_modules/.bin/babel-node example7.js
 ```
 
 This will transform the code on-the-fly and execute it, printing out some results. (The necessary configuration is already in `.babelrc`.)
 
-Advanced type system features are illustrated via a series of examples under `src/`. We will also see how to write (or find) type declarations for external dependencies.
+Advanced type system features are illustrated via a series of examples under `src/`. We will also see how to write (or find) type declarations for external dependencies. Make sure to run
+```
+node_modules/.bin/flow-typed install
+```
 
 To explore commands, run
 ```
