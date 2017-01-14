@@ -83,7 +83,7 @@ node_modules/.bin/babel-node example7.js
 
 This will transform the code on-the-fly and execute it, printing out some results. (The necessary configuration is already in `.babelrc`.)
 
-Advanced type system features are illustrated via a series of examples under `src/`. We will also see how to write (or find) type declarations for external dependencies. Make sure to run
+Advanced type system features are illustrated via a series of examples under `src/`. We will also see how to find type declarations for external dependencies using [`flow-typed`](https://github.com/flowtype/flow-typed). Make sure to run
 ```
 node_modules/.bin/flow-typed install
 ```
