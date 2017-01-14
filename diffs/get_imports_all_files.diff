@@ -1,0 +1,99 @@
+commit dc9b20c243d87b8e408b0324d82b002b12841e6c
+Author: Avik Chaudhuri <avik@fb.com>
+Date:   Fri Jan 13 18:35:15 2017 -0800
+
+    get imports for all files
+
+diff --git a/src/commands/getImportsCommand.ml b/src/commands/getImportsCommand.ml
+index 36b3070..8da56c7 100644
+--- a/src/commands/getImportsCommand.ml
++++ b/src/commands/getImportsCommand.ml
+@@ -31,7 +31,7 @@ let spec = {
+     |> root_flag
+     |> json_flags
+     |> strip_root_flag
+-    |> anon "modules" (required (list_of string))
++    |> anon "modules" (list_of string)
+         ~doc:"Module name(s) to find"
+   )
+ }
+@@ -43,6 +43,10 @@ let main option_values root json pretty strip_root modules () =
+ 
+   let ic, oc = connect option_values root in
+ 
++  let modules = match modules with
++    | None -> []
++    | Some ms -> ms in
++
+   ServerProt.cmd_to_channel oc (ServerProt.GET_IMPORTS modules);
+   let requirements_map, non_flow = Timeout.input_value ic in
+   let requirements_map = SMap.fold
+diff --git a/src/server/server.ml b/src/server/server.ml
+index 0f97a24..40033ae 100644
+--- a/src/server/server.ml
++++ b/src/server/server.ml
+@@ -471,6 +471,32 @@ module FlowProgram : Server.SERVER_PROGRAM = struct
+     Marshal.to_channel oc results [];
+     flush oc
+ 
++  let imports_of_file file module_name_str (map, non_flow) =
++    let { Module_js.
++          required = requirements;
++          require_loc = req_locs;
++          checked; _ } =
++      Module_js.get_module_info ~audit:Expensive.warn file in
++      if checked
++      then
++        (SMap.add module_name_str (requirements, req_locs) map, non_flow)
++      else
++        (map, SSet.add module_name_str non_flow)
++
++  let get_imports_all_files workers files oc =
++    let results = MultiWorker.call
++      workers
++      ~job: begin List.fold_left
++          (fun (map, non_flow) file ->
++             imports_of_file file (string_of_filename file) (map, non_flow)
++      ) end
++      ~neutral: (SMap.empty, SSet.empty)
++      ~merge: (fun (map1, set1) (map2, set2) ->
++                 SMap.union map1 map2, SSet.union set1 set2)
++      ~next: (MultiWorker.next workers files) in
++    Marshal.to_channel oc results [];
++    flush oc
++
+   let get_imports ~options module_names oc =
+     let add_to_results (map, non_flow) module_name_str =
+       let module_name = module_name_of_string ~options module_name_str in
+@@ -481,16 +507,7 @@ module FlowProgram : Server.SERVER_PROGRAM = struct
+          * are not kept track of. To avoid confusing results we notify the
+          * client that these modules have not been processed.
+          *)
+-        let { Module_js.
+-              required = requirements;
+-              require_loc = req_locs;
+-              checked; _ } =
+-          Module_js.get_module_info ~audit:Expensive.warn file in
+-        if checked
+-        then
+-          (SMap.add module_name_str (requirements, req_locs) map, non_flow)
+-        else
+-          (map, SSet.add module_name_str non_flow)
++        imports_of_file file module_name_str (map, non_flow)
+       | None ->
+         (* We simply ignore non existent modules *)
+         (map, non_flow)
+@@ -658,7 +675,12 @@ module FlowProgram : Server.SERVER_PROGRAM = struct
+     | ServerProt.GET_IMPORTERS module_names ->
+         get_importers ~options module_names oc
+     | ServerProt.GET_IMPORTS module_names ->
+-        get_imports ~options module_names oc
++        if module_names = []
++        then
++          let files = FilenameSet.elements !env.files in
++          print_endlinef "Files %d" (List.length files);
++          get_imports_all_files genv.workers files oc
++        else get_imports ~options module_names oc
+     | ServerProt.INFER_TYPE (fn, line, char, verbose, include_raw) ->
+         infer_type ~options (fn, line, char, verbose, include_raw) oc
+     | ServerProt.KILL ->

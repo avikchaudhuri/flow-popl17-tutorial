@@ -1,0 +1,125 @@
+commit f323ce4fdf36bf480b934a0f71329c80b4951a33
+Author: Avik Chaudhuri <avik@fb.com>
+Date:   Fri Jan 13 11:48:56 2017 -0800
+
+    exact arity
+
+diff --git a/src/typing/debug_js.ml b/src/typing/debug_js.ml
+index 225f3c2..25f594e 100644
+--- a/src/typing/debug_js.ml
++++ b/src/typing/debug_js.ml
+@@ -1902,6 +1902,7 @@ let dump_flow_error =
+           (dump_reason cx reason_tapp)
+           (dump_reason cx reason_arity)
+           minimum_arity
++    | ETooManyArgs _reason -> ""
+     | EPropertyTypeAnnot loc ->
+         spf "EPropertyTypeAnnot (%s)" (string_of_loc loc)
+     | EExportsAnnot loc ->
+diff --git a/src/typing/flow_error.ml b/src/typing/flow_error.ml
+index f0836e4..06ddb69 100644
+--- a/src/typing/flow_error.ml
++++ b/src/typing/flow_error.ml
+@@ -81,6 +81,7 @@ type error_message =
+   | ETypeParamMinArity of Loc.t * int
+   | ETooManyTypeArgs of reason * reason * int
+   | ETooFewTypeArgs of reason * reason * int
++  | ETooManyArgs of reason
+   | EPropertyTypeAnnot of Loc.t
+   | EExportsAnnot of Loc.t
+   | EUnsupportedKeyInObjectType of Loc.t
+@@ -714,6 +715,11 @@ let rec error_of_msg ~trace_reasons ~op ~source_file =
+         mk_info reason_arity [];
+       ]
+ 
++  | ETooManyArgs reason_op ->
++      mk_error ~trace_infos [
++        mk_info reason_op ["Too many arguments"];
++      ]
++
+   | EPropertyTypeAnnot loc ->
+       let msg =
+         "expected object type and string literal as arguments to \
+diff --git a/src/typing/flow_js.ml b/src/typing/flow_js.ml
+index 155f0b1..10449f3 100644
+--- a/src/typing/flow_js.ml
++++ b/src/typing/flow_js.ml
+@@ -3176,7 +3176,7 @@ let rec __flow cx ((l: Type.t), (u: Type.use_t)) trace =
+       ->
+       Ops.push reason_callsite;
+       rec_flow cx trace (o2, UseT (FunCallThis reason_callsite, o1));
+-      multiflow cx trace reason_callsite ~rest_param (tins2, tins1);
++      multiflow cx trace reason_callsite ~exact_arity:true ~rest_param (tins2, tins1);
+       Ops.pop ();
+ 
+       (* flow return type of function to the tvar holding the return type of the
+@@ -8566,8 +8566,8 @@ and array_unify cx trace = function
+ (* subtyping a sequence of arguments with a sequence of parameters *)
+ (*******************************************************************)
+ 
+-and multiflow cx trace reason_op ~rest_param (arglist, parlist) =
+-  multiflow_partial cx trace ~strict:reason_op ~rest_param (arglist, parlist) |> ignore
++and multiflow cx trace reason_op ?exact_arity ~rest_param (arglist, parlist) =
++  multiflow_partial cx trace ~strict:reason_op ?exact_arity ~rest_param (arglist, parlist) |> ignore
+ 
+ (* Match arguments to parameters, taking an optional parameter 'strict':
+    - when strict=None, missing arguments (and unmatched parameters) are
+@@ -8576,13 +8576,24 @@ and multiflow cx trace reason_op ~rest_param (arglist, parlist) =
+    whose types are given a reason derived from reason_op when passing to
+    unmatched parameters.
+ *)
+-and multiflow_partial cx trace ?strict ~rest_param (arglist, parlist) =
++and multiflow_partial cx trace ?strict ?(exact_arity=false) ~rest_param (arglist, parlist) =
+   match (arglist, parlist, rest_param) with
+   (* Do not complain on too many arguments.
+      This pattern is ubiqutous and causes a lot of noise when complained about.
+      Note: optional/rest parameters do not provide a workaround in this case.
+   *)
+-  | (_, [], None) -> []
++  | (_, [], None) ->
++      begin match strict with
++        | Some reason_op ->
++            if exact_arity && arglist <> []
++            then begin
++              prerr_endlinef "Too many arguments detected: %s"
++                (string_of_reason reason_op);
++              add_output cx ~trace (FlowError.ETooManyArgs reason_op)
++            end
++        | None -> ()
++      end;
++     []
+ 
+   (* TODO - Spread arguments are kind of broken. First they're only processed
+      when they're the last argument. Second, if we don't know the arity of the
+@@ -8597,11 +8608,11 @@ and multiflow_partial cx trace ?strict ~rest_param (arglist, parlist) =
+ 
+   | ([SpreadArg (RestT tin)], tout::touts, _) ->
+     rec_flow_t cx trace (tin, tout);
+-    multiflow_partial cx trace ?strict ~rest_param (arglist, touts)
++    multiflow_partial cx trace ?strict ~exact_arity ~rest_param (arglist, touts)
+ 
+   | ((SpreadArg tin | Arg tin)::tins, [], Some (_, RestT tout)) ->
+     rec_flow_t cx trace (tin, tout);
+-    multiflow_partial cx trace ?strict ~rest_param (tins, [])
++    multiflow_partial cx trace ?strict ~exact_arity ~rest_param (tins, [])
+ 
+   | ([], [], _) -> []
+ 
+@@ -8615,7 +8626,7 @@ and multiflow_partial cx trace ?strict ~rest_param (arglist, parlist) =
+     | Some reason_op ->
+         let reason = replace_reason_const RTooFewArgsExpectedRest reason_op in
+         rec_flow_t cx trace (VoidT reason, tout);
+-        multiflow_partial cx trace ?strict ~rest_param ([], touts)
++        multiflow_partial cx trace ?strict ~exact_arity ~rest_param ([], touts)
+     | None ->
+         tout::touts
+     );
+@@ -8635,7 +8646,7 @@ and multiflow_partial cx trace ?strict ~rest_param (arglist, parlist) =
+       | _ -> ReposLowerT (reason_of_t tin, u)
+     in
+     rec_flow cx trace (tin, tout);
+-    multiflow_partial cx trace ?strict ~rest_param (tins,touts)
++    multiflow_partial cx trace ?strict ~exact_arity ~rest_param (tins,touts)
+ 
+ and perform_lookup_action cx trace propref p lreason ureason = function
+   | LookupProp up ->
