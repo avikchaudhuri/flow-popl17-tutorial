@@ -1,3 +1,5 @@
+<img src="https://github.com/facebook/flow/blob/master/website/_assets/images/flow-no-wordmark.png" width="100">
+
 # POPL 2017 Tutorial
 
 ## Fast and Precise Type Checking for JavaScript: *Are you in Flow?*
