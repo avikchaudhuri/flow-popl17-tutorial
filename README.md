@@ -18,3 +18,13 @@
    * Building
    * Tweaking a type system feature
    * Extending a command
+   
+### Useful links
+
+[Website](https://flowtype.org/)
+
+[Docs](https://flowtype.org/docs/getting-started.html#_)
+
+[Code](https://github.com/facebook/flow)
+
+[Playground](https://flowtype.org/try/)
