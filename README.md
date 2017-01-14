@@ -13,17 +13,17 @@ If you don't have `git`, that's fine. Click the `Clone or download` button and s
 
 ### Outline
 
-1. Overview of Flow's design and implementation ([`slides/`](slides/))
+1. Overview of Flow's design and implementation ([`slides/`](slides/), ~45 minutes)
    * Why Flow?
    * Precision
    * Speed
-2. Using Flow ([`examples/`](examples/))
+2. Using Flow ([`examples/`](examples/), ~45 minutes)
    * Installation
    * Typechecking code
    * Running code
    * Type system features
    * Commands
-3. Contributing to Flow ([`diffs/`](examples/))
+3. Contributing to Flow ([`diffs/`](examples/), ~45 minutes)
    * Building
    * Tweaking a type system feature
    * Extending a command
