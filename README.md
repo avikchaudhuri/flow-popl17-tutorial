@@ -11,7 +11,7 @@ git clone https://github.com/avikchaudhuri/flow-popl17-tutorial.git
 If you don't have `git`, that's fine. Click the `Clone or download` button and select `Download ZIP`.
 
 
-### Outline
+### Outline of Tutorial
 
 1. Overview of Flow's design and implementation *\[45 mins\]* ([`slides/`](slides/))
    * Why Flow?
@@ -28,7 +28,7 @@ If you don't have `git`, that's fine. Click the `Clone or download` button and s
    * Tweaking a type system feature
    * Extending a command
    
-### Links
+### Helpful Links
 
 * [Website](https://flowtype.org/)
 * [Docs](https://flowtype.org/docs/getting-started.html#_)
