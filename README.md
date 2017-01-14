@@ -2,6 +2,15 @@
 
 ## Fast and Precise Type Checking for JavaScript: *Are you in Flow?*
 
+This repository [(https://github.com/avikchaudhuri/flow-popl17-tutorial/)](https://github.com/avikchaudhuri/flow-popl17-tutorial/) contains material that will be used in this tutorial. Grab a local copy to follow along.
+
+```
+git clone https://github.com/avikchaudhuri/flow-popl17-tutorial.git
+```
+
+If you don't have `git`, that's fine. Click the `Clone or download` button and select `Download ZIP`.
+
+
 ### Outline
 
 1. Overview of Flow's design and implementation ([`slides/`](slides/))
@@ -19,9 +28,20 @@
    * Tweaking a type system feature
    * Extending a command
    
-### Useful links
+### Links
 
 * [Website](https://flowtype.org/)
 * [Docs](https://flowtype.org/docs/getting-started.html#_)
 * [Code](https://github.com/facebook/flow)
 * [Playground](https://flowtype.org/try/)
+
+### Using Flow
+
+Install Node. We will use `npm`, which is the Node package manager.
+
+```
+cd examples
+npm install
+```
+
+### Contributing to Flow
