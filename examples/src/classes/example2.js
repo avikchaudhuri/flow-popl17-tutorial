@@ -1,8 +1,9 @@
 // @flow
+// (property variance)
 
 import { carla } from './example1';
 
-function hello(you: { +name: string | Array<string> }) {
+function hello(you: { name: string | Array<string> }) {
   you.name = [];
   // const name = you.name;
   // if (typeof name === "string") console.log(name);
@@ -10,4 +11,3 @@ function hello(you: { +name: string | Array<string> }) {
 };
 
 hello(carla);
-

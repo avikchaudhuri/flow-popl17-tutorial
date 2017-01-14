@@ -1,4 +1,5 @@
 // @flow
+// (disjoint unions, recursive types, pattern matching)
 
 type List<T> =
   | { kind: "nil" }
@@ -9,7 +10,7 @@ function length<T>(list: List<T>) {
   return length(list.next);
 }
 
-function fold<T,S>(list: List<T>, acc: S, fun: (T, S) => S): S {
-  if (list.kind === "nil") return acc;
-  return fold(list.next, fun(list.val, acc), fun)
-}
+// function fold<T,S>(list: List<T>, acc: S, fun: (T, S) => S): S {
+//   if (list.kind === "nil") return acc;
+//   return fold(list.next, fun(list.val, acc), fun)
+// }

@@ -1,4 +1,5 @@
 // @flow
+// (export annotations)
 
 export function positive(n) {
   return n > 0;

@@ -1,4 +1,5 @@
 // @flow
+// (higher-order functions)
 
 import positive from './example2';
 
@@ -7,4 +8,3 @@ function filterNumbers(arr: Array<number>, fun: (number) => boolean) {
 }
 
 console.log(filterNumbers([42, -42], positive));
-

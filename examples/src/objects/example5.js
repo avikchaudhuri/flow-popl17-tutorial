@@ -1,4 +1,5 @@
 // @flow
+// (exact object types)
 
 import type { Point } from './example2';
 
@@ -11,5 +12,3 @@ function cast(p: Point2D): Point {
 }
 
 cast({ x: 42, y: 666, z: "tee hee" });
-
-
