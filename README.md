@@ -80,7 +80,7 @@ To execute an example, e.g. `example7.js`, run
 babel-node example7.js
 ```
 
-This will transform the code on-the-fly and execute it, orinting out some results. (The necessary configuration is already in `.babelrc`.)
+This will transform the code on-the-fly and execute it, printing out some results. (The necessary configuration is already in `.babelrc`.)
 
 Advanced type system features are illustrated via a series of examples under `src/`.
 
