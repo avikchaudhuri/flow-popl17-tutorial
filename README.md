@@ -32,7 +32,7 @@ If you don't have `git`, that's fine. Click the `Clone or download` button and s
 
 * [Website](https://flowtype.org/)
 * [Docs](https://flowtype.org/docs/getting-started.html#_)
-* [Code](https://github.com/facebook/flow)
+* [Source code](https://github.com/facebook/flow)
 * [Playground](https://flowtype.org/try/)
 * [Library definitions](https://github.com/flowtype/flow-typed)
 
