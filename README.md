@@ -34,6 +34,7 @@ If you don't have `git`, that's fine. Click the `Clone or download` button and s
 * [Docs](https://flowtype.org/docs/getting-started.html#_)
 * [Code](https://github.com/facebook/flow)
 * [Playground](https://flowtype.org/try/)
+* [Library definitions](https://github.com/flowtype/flow-typed)
 
 ### Prerequisites
 
@@ -82,7 +83,7 @@ babel-node example7.js
 
 This will transform the code on-the-fly and execute it, printing out some results. (The necessary configuration is already in `.babelrc`.)
 
-Advanced type system features are illustrated via a series of examples under `src/`.
+Advanced type system features are illustrated via a series of examples under `src/`. We will also see how to write (or find) type declarations for external dependencies.
 
 To explore commands, run
 ```
