@@ -63,7 +63,7 @@ cd examples
 npm install
 ```
 
-This should install Flow and Babel, among other things. Babel transforms code, in particular stripping out type annotations, to emit JavaScript that `node` can run.
+This should install Flow and [Babel](https://babeljs.io/), among other things. Babel transforms code, in particular stripping out type annotations, to emit JavaScript that `node` can run.
 
 To check the examples in this directory, run
 ```
