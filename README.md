@@ -92,3 +92,12 @@ In particular, commands such as `type-at-pos`, `get-def`, and `autocomplete` are
 
 
 ### Contributing to Flow
+
+Get the source code [here](https://github.com/facebook/flow) and build it.
+```
+make
+```
+
+The compiled binary is at `bin/flow`.
+
+A couple of exercises we will work through are under `diffs/`. These are designed to give an overview of the way typing rules work, and the way commands can be implemented to query Flow for information about code.
