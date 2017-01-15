@@ -106,4 +106,6 @@ make
 
 The compiled binary is at `bin/flow`.
 
+[Here](https://github.com/facebook/flow/wiki/The-Flow-Codebase:-Introduction) is a rough guide to help you navigate through the source code.
+
 A couple of exercises we will work through are under `diffs/`. These are designed to give an overview of the way typing rules work, and the way commands can be implemented to query Flow for information about code.
