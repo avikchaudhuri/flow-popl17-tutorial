@@ -19,13 +19,13 @@ If you don't have `git`, that's fine. Click the `Clone or download` button and s
    * Why Flow?
    * Precision
    * Speed
-2. Using Flow *\[45 mins\]* ([`examples/`](examples/))
+2. [Using Flow](https://github.com/avikchaudhuri/flow-popl17-tutorial#using-flow) *\[45 mins\]* ([`examples/`](examples/))
    * Installation
    * Typechecking code
    * Running code
    * Type system features
    * Commands
-3. Contributing to Flow *\[45 mins\]* ([`diffs/`](examples/))
+3. [Contributing to Flow](https://github.com/avikchaudhuri/flow-popl17-tutorial#contributing-to-flow) *\[45 mins\]* ([`diffs/`](examples/))
    * Building
    * Tweaking a type system feature
    * Extending a command
